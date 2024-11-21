@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerControllerX : MonoBehaviour
 {
@@ -14,7 +15,10 @@ public class PlayerControllerX : MonoBehaviour
 
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
-    
+
+    public ParticleSystem smokeParticle;
+
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
@@ -30,6 +34,7 @@ public class PlayerControllerX : MonoBehaviour
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
 
+        smokeParticle.transform.position = transform.position;
     }
 
     // If Player collides with powerup, activate powerup
@@ -69,5 +74,11 @@ public class PlayerControllerX : MonoBehaviour
                 enemyRigidbody.AddForce(awayFromPlayer * normalStrength, ForceMode.Impulse);
             }
         }
+    }
+
+    public void OnJump(InputValue inputValue)
+    {
+        smokeParticle.Play();
+        playerRb.AddForce(focalPoint.transform.forward * normalStrength, ForceMode.Impulse);
     }
 }
